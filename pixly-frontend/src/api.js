@@ -15,14 +15,17 @@ class PixlyApi {
   static async request(endpoint, data = {}, method = "get") {
     console.debug("API Call:", endpoint, data, method);
 
-    const url = `${BASE_URL}/${endpoint}`;
-    //const headers = { Authorization: `Bearer ${JoblyApi.token}` };
+    const url = `${BASE_URL}${endpoint}`;
+    // const headers = { Authorization: `Bearer ${JoblyApi.token}` };
+    // const headers = { 'Content-Type': 'application/json' };
     const params = (method === "get")
         ? data
         : {};
-
+    console.log("DATA", data)
     try {
-      return (await axios({ url, method, data, params })).data; // removed headers
+      let res = await axios({ url, method, data, params }); // removed headers
+      console.log("RESPONSE", res);
+      return res;
     } catch (err) {
       console.error("API Error:", err.response);
       let message = err.response.data.error.message;

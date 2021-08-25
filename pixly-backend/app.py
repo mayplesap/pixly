@@ -5,7 +5,7 @@ import boto3
 
 from PIL import Image
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db
 # from secret import ACCESS_KEY, SECRET_KEY
@@ -46,12 +46,13 @@ connect_db(app)
 #     ..."""
 
 @app.route("/", methods=["POST"])
+# @cross_origin()
 def upload_file():
-
-    if "user_file" not in request.files:
+    print("USER FILE", request.json)
+    if "name" not in request.files:
         return "No user_file key in request.files"
 
-    file = request.files["user_file"]
+    file = request.files["name"]
 
     """
         These attributes are also available
@@ -69,8 +70,6 @@ def upload_file():
     if file and allowed_file(file.filename):
         file.filename = secure_filename(file.filename)
         output = upload_file_to_s3(file, S3_BUCKET)
-        print(S3_BUCKET, "THIS IS THE BUCKET NAME FROM APP")
-        print("THIS IS THE OUTPUT FROM APP",output)
         return str(output)
 
     else: 

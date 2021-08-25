@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import UploadForm from "./UploadForm";
 import PixlyApi from "./api";
+import "bootstrap/dist/css/bootstrap.css"
 import './App.css';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       setFilename(filename);
       console.log("APP UPLOAD", filename);
       let link = await PixlyApi.uploadImage(filename);
+      console.log("LINK", link)
       setLink(link);
     }
   
