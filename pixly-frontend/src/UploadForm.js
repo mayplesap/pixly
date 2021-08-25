@@ -28,13 +28,14 @@ function UploadForm({ upload }) {
 
   return (
     <form encType="multipart/form-data"
+          action=""
           onSubmit={handleSubmit}
           className="UploadForm container">
       <div className="form-group">
-        <label htmlFor="userFile">Upload an image file</label>
+        <label htmlFor="file">Upload an image file</label>
         <input type="file" 
-               name="user_file" 
-               id="userFile"
+               name="file" 
+               id="file"
                className="form-control"
                onChange={handleChange} />
         <button type="submit" className="btn btn-primary mt-3">Upload!</button>

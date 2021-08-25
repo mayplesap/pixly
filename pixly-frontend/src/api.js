@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://localhost:5000/";
 
 /** API Class.
  *
@@ -12,18 +12,20 @@ const BASE_URL = "http://localhost:5000";
 
 class PixlyApi {
 
-  static async request(endpoint, data = {}, method = "get") {
-    console.debug("API Call:", endpoint, data, method);
+  static async request(data = {}, method = "get") {
+    console.debug("API Call:", data, method);
 
-    const url = `${BASE_URL}${endpoint}`;
+    const url = BASE_URL;
     // const headers = { Authorization: `Bearer ${JoblyApi.token}` };
-    // const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" };
+    const headers = { 'Content-Type': 'application/json, multipart/form-data, application/x-www-form-urlencoded', 
+                      "Accept": "application/json" };
     const params = (method === "get")
         ? data
         : {};
     console.log("DATA", data)
     try {
-      let res = await axios({ url, method, data, params }); // removed headers
+      let res = await axios({ url, method, data, params, headers }); // removed headers
       console.log("RESPONSE", res);
       return res;
     } catch (err) {
@@ -39,7 +41,7 @@ class PixlyApi {
 
   static async uploadImage(data) {
       console.log("API UPLOAD DATA", data)
-    let res = await this.request(`/`, data, "post");
+    let res = await this.request(data, "post");
     console.log("API UPLOAD RES", res)
     return res;
   }

@@ -6,16 +6,16 @@ import './App.css';
 
 function App() {
  
-    const [filename, setFilename] = useState("");
-    const [link, setLink] = useState(null);
+    // const [filename, setFilename] = useState("");
+    // const [link, setLink] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
   
     async function upload(filename) {
-      setFilename(filename);
+      // setFilename(filename);
       console.log("APP UPLOAD", filename);
       let link = await PixlyApi.uploadImage(filename);
       console.log("LINK", link)
-      setLink(link);
+      // setLink(link);
     }
   
     // useEffect(function uploadImage() {

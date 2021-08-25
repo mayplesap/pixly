@@ -46,9 +46,12 @@ connect_db(app)
 #     ..."""
 
 @app.route("/", methods=["POST"])
-# @cross_origin()
+@cross_origin()
 def upload_file():
-    print("USER FILE", request.form.to_dict(flat=False))
+    # print("USER FILE", request.form.to_dict(flat=False))
+    print("USER FILE", request.files)
+    print("REQUEST DATA", request.data)
+    print("REQUEST JSON", request.json)
     if "name" not in request.files:
         return "No user_file key in request.files"
 
