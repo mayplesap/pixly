@@ -1,24 +1,36 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from "react";
+import UploadForm from "./UploadForm";
+import PixlyApi from "./api";
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+ 
+    const [filename, setFilename] = useState("");
+    const [link, setLink] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+  
+    async function upload(filename) {
+      setFilename(filename);
+      console.log("APP UPLOAD", filename);
+      let link = await PixlyApi.uploadImage(filename);
+      setLink(link);
+    }
+  
+    // useEffect(function uploadImage() {
+    //   async function uploadImageGetLink() {
+    //     const response = await axios.post(`${BASE_URL}`);
+    //     setLink(response);
+    //     setIsLoading(false);
+    //   }
+    //    uploadImageGetLink();
+    // }, [filename]);
+  
+    if (isLoading) return <i>Loading...</i>
+  
+    return (
+        <div>
+          <UploadForm upload={upload} />
+        </div>
   );
 }
 
