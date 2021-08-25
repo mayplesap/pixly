@@ -38,15 +38,16 @@ s3 = boto3.resource('s3',
         aws_access_key_id=ACCESS_KEY,
         aws_secret_access_key=SECRET_KEY)
 bucket = "sk-rithm-pixly"
-file_name = "./oz.jpg"
-key_name = "oz.jpg"
+# bucket = 
+file_name = "./ozzy.jpg"
+key_name = "ozzy.jpg"
 
 # with open('oz.jpg','rb') as data:
 #     bucket.upload_fileobj(data, 'mykey')
 
 # Upload a new file to bucket
-s3.meta.client.upload_file(file_name, bucket, key_name, ExtraArgs={'GrantRead': 'uri="http://acs.amazonaws.com/groups/global/AllUsers"',
-                                                                    "GrantReadACP":'uri="http://acs.amazonaws.com/groups/global/AllUsers"'})
+s3.meta.client.upload_file(file_name, bucket, key_name, ExtraArgs={"ACL":"public-read",
+                                                                  "ContentType": "image/jpeg"})
 
 # data = open('test.jpg', 'rb')
 # s3.Bucket('my-bucket').put_object(Key='test.jpg', Body=data)
