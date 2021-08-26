@@ -12,10 +12,10 @@ const BASE_URL = "http://localhost:5000/";
 
 class PixlyApi {
 
-  static async request(data = {}, method = "get") {
+  static async request(endpoint, data = {}, method = "get") {
     console.debug("API Call:", data, method);
 
-    const url = BASE_URL;
+    const url = `${BASE_URL}${endpoint}`;
     // const headers = { Authorization: `Bearer ${JoblyApi.token}` };
     // const headers = { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" };
     const headers = { 'Content-Type': 'application/json, multipart/form-data, application/x-www-form-urlencoded', 
@@ -43,6 +43,13 @@ class PixlyApi {
     console.log("API UPLOAD DATA", data)
     let res = await this.request(data, "post");
     console.log("API UPLOAD RES", res)
+    return res;
+  }
+
+  /** Image Border */
+
+  static async borderImage() {
+    let res = await this.request("api/images");
     return res;
   }
 }

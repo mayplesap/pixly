@@ -3,11 +3,11 @@ import os
 import pdb
 import boto3
 
-from PIL import Image
+from PIL import Image, ImageOps
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db
+from models import db, connect_db, Pixly
 # from secret import ACCESS_KEY, SECRET_KEY
 from config import S3_BUCKET, S3_KEY, S3_LOCATION, S3_SECRET
 from helpers import s3, upload_file_to_s3, allowed_file
@@ -28,6 +28,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
+db.create_all()
 
 
 
@@ -39,23 +40,32 @@ connect_db(app)
 #     Get data of all images. Respond with JSON like:
 #     ..."""
 
-# @app.route("/api/images/<int:image_id>")
-# def show_image():
-#     """TODO: NAME PENDING
-#     Get data of a image. Respond with JSON like:
-#     ..."""
+@app.route("/api/images", methods=["GET"])
+def show_image():
+    """TODO: docstrings"""
+    image = Pixly.query.get(1)
+    print("IMAGE", image)
+    print("IMAGE LINK?", image.img_link)
+    im = Image.open(image.img_link)
+    print("IM", im)
+    color = "green"
+    border = (20,10,20,10)
+    new_img = ImageOps.expand(im, border=border, fill=color)
+    return new_img
+
 
 @app.route("/", methods=["POST"])
 @cross_origin()
 def upload_file():
-    # print("USER FILE", request.form.to_dict(flat=False))
-    print("USER FILE", request.files)
-    print("REQUEST DATA", request.data)
-    print("REQUEST JSON", request.json)
-    if "name" not in request.files:
+    """TODO: docstrings"""
+    if "file" not in request.files:
         return "No user_file key in request.files"
 
-    file = request.files["name"]
+    file = request.files["file"]
+    # below variables for database
+    uploadedBy = request.form["uploadedBy"]
+    category = request.form["category"]
+    name = request.form["name"]
 
     """
         These attributes are also available
@@ -73,6 +83,13 @@ def upload_file():
     if file and allowed_file(file.filename):
         file.filename = secure_filename(file.filename)
         output = upload_file_to_s3(file, S3_BUCKET)
+
+        new_image = Pixly(name=name,
+                      category=category,
+                      uploaded_by=uploadedBy,
+                      img_link=str(output))
+        db.session.add(new_image)
+        db.session.commit()
         return str(output)
 
     else: 

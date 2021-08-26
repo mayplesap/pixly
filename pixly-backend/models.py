@@ -20,9 +20,11 @@ class Pixly(db.Model):
                    autoincrement=True)
     name = db.Column(db.Text,
                      nullable=False)
-    description = db.Column(db.Text)
-    created_by = db.Column(db.Text,
+    category = db.Column(db.Text)
+    uploaded_by = db.Column(db.Text,
                            nullable=False)
+    img_link = db.Column(db.Text,
+                         nullable=False)
     # TODO: metadata
 
     def serialize(self):
@@ -31,6 +33,7 @@ class Pixly(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "description": self.description,
-            "created_by": self.created_by
+            "category": self.category,
+            "uploaded_by": self.uploaded_by,
+            "img_link": self.img_link
         }

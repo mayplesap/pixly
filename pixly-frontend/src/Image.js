@@ -1,9 +1,10 @@
 import React from "react";
+import "./Image.css";
 
 function Image( {link}) {
     return (
-        <div>
-            <img src={link} alt=""></img>
+        <div className="Image text-center">
+            <img src={link} alt="" className="Image-img"></img>
         </div>
     )
 }

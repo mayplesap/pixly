@@ -7,16 +7,18 @@ import Image from "./Image";
 
 function App() {
  
-    // const [filename, setFilename] = useState("");
     const [link, setLink] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [border, setBorder] = useState(null);
   
-    async function upload(filename) {
-      // setFilename(filename);
-      console.log("APP UPLOAD", filename);
-      const response = await PixlyApi.uploadImage(filename);
+    async function upload(data) {
+      console.log("APP UPLOAD", data);
+      const response = await PixlyApi.uploadImage(data);
       const imgLink = response.data;
       setLink(imgLink);
+      const bi = await PixlyApi.borderImage();
+      console.log("BI", bi)
+      setBorder(bi);
     }
   
     // useEffect(function uploadImage() {
@@ -33,6 +35,7 @@ function App() {
     return (
         <div>
           <Image link={link} />
+          <Image link={border} />
           <UploadForm upload={upload} />
         </div>
   );

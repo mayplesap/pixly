@@ -20,9 +20,6 @@ s3 = boto3.client(
 def upload_file_to_s3(file, bucket_name, acl="public-read"):
 
     try: 
-        print(file.filename, "FILE.FILENAME FROM UPLOAD IN HELPERS, And the type is: ", type(file.filename), )
-        print(file.content_type, "FILE.CONTENT-TYPE FROM UPLOAD IN HELPERS, and the type is: ", type(file.content_type))
-        print(bucket_name, "BUCKET NAME FROM HELPERS")
         s3.upload_fileobj(  #  s3.upload_fileobj
             file,
             bucket_name,
