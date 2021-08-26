@@ -12,7 +12,7 @@ import React, { useState } from "react";
 */
 
 function UploadForm({ upload }) {
-  const [userFile, setUserFile] = useState({ file: null});
+  const [userFile, setUserFile] = useState({ file: null}); // rename to something like formData, so if also had a title and a desc, we could data.append each one, or iterate over and dynamically add them
 
   function handleChange(evt) {
     console.log("handleChange", evt.target.files)
@@ -22,7 +22,9 @@ function UploadForm({ upload }) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    upload(userFile);
+    const data = new FormData(); // have to append indiv key/value pairs once we have more form fields (see line 15)
+    data.append("name", userFile.file);
+    upload(data);
     setUserFile({ file: null});
   }
 

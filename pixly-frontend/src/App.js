@@ -3,19 +3,20 @@ import UploadForm from "./UploadForm";
 import PixlyApi from "./api";
 import "bootstrap/dist/css/bootstrap.css"
 import './App.css';
+import Image from "./Image";
 
 function App() {
  
     // const [filename, setFilename] = useState("");
-    // const [link, setLink] = useState(null);
+    const [link, setLink] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
   
     async function upload(filename) {
       // setFilename(filename);
       console.log("APP UPLOAD", filename);
-      let link = await PixlyApi.uploadImage(filename);
-      console.log("LINK", link)
-      // setLink(link);
+      const response = await PixlyApi.uploadImage(filename);
+      const imgLink = response.data;
+      setLink(imgLink);
     }
   
     // useEffect(function uploadImage() {
@@ -31,6 +32,7 @@ function App() {
   
     return (
         <div>
+          <Image link={link} />
           <UploadForm upload={upload} />
         </div>
   );

@@ -40,7 +40,7 @@ class PixlyApi {
   /** Upload image. */
 
   static async uploadImage(data) {
-      console.log("API UPLOAD DATA", data)
+    console.log("API UPLOAD DATA", data)
     let res = await this.request(data, "post");
     console.log("API UPLOAD RES", res)
     return res;
