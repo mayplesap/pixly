@@ -1,6 +1,9 @@
+import os
 import boto3
 from config import S3_KEY, S3_SECRET, S3_LOCATION, S3_BUCKET
 from PIL import Image, ImageOps
+from models import db, Pixly
+
 
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif', 'tiff', 'svg'}
 
@@ -37,12 +40,54 @@ def upload_file_to_s3(file, bucket_name, acl="public-read"):
     
     return "{}{}".format(S3_LOCATION, file.filename)
 
+
+def upload_backend_file_to_s3(filepath, bucket_name, acl="public-read"):
+    filename = filepath.split("/")[-1]
+    extension = filepath.split(".")[-1]
+# filepath ./images/cute.jpg
+# filename cute.jpg
+# extension jpg
+# contentType "image/jpg"
+    
+    if extension == "jpg":
+        extension = "jpeg"
+    
+    try: 
+        s3.upload_file(  #  s3.upload_fileobj
+            filepath,
+            bucket_name,
+            filename,
+            ExtraArgs={
+                "ACL": acl,
+                "ContentType": (f"image/{extension}")
+            }
+        )
+    
+    except Exception as e:
+        print("Something went wrong: ", e)
+        return e
+    
+    return "{}{}".format(S3_LOCATION, filename)
+
+def fetch_image_link_from_db(id):
+    link = db.session.query(Pixly.img_link).filter(Pixly.id == id).one()[0]
+    return link
+
+def fetch_image_file_from_bucket(link): 
+    
+    # print(link, "IMG LINK FROM DB QUERY")
+    # filename = link.split("/")[-1]
+    # print(filename, "FILENAME FROM DB QUERY")
+    # link.save(f"./images/{filename}")
+
 def convert_to_black_and_white(imagePath):
     image = Image.open(imagePath)
     greyscale_image = image.convert('L')
-    print(greyscale_image, "THIS IS GSCALEIMG")
-    link = upload_file_to_s3(greyscale_image, S3_BUCKET)
-    print(link, "LINK FROM B&W")
-    return link
+    greyscale_image.save(imagePath)
+    link = upload_backend_file_to_s3(imagePath, S3_BUCKET) 
+    os.remove(imagePath)
+    return str(link)
+
+
 
 
