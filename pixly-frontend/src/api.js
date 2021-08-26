@@ -40,9 +40,7 @@ class PixlyApi {
   /** Upload image. */
 
   static async uploadImage(data) {
-    console.log("API UPLOAD DATA", data)
     let res = await this.request('', data, "post");
-    console.log("API UPLOAD RES", res)
     return res;
   }
 
@@ -51,6 +49,15 @@ class PixlyApi {
   static async borderImage() {
     let res = await this.request("api/images");
     return res;
+  }
+
+  /** Black and White Image */
+
+  static async blackWhiteImage(link) {
+    console.log("API BWIMAGE LINK", link)
+    let res = await this.request("image", link, "post");
+    return res;
+
   }
 }
 

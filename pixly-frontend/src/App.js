@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import UploadForm from "./UploadForm";
+import ImageEditForm from "./ImageEditForm";
 import PixlyApi from "./api";
 import "bootstrap/dist/css/bootstrap.css"
 import './App.css';
@@ -9,7 +10,7 @@ function App() {
  
     const [link, setLink] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [border, setBorder] = useState(null);
+    const [bwLink, setBwLink] = useState(null);
   
     async function upload(data) {
       console.log("APP UPLOAD", data);
@@ -21,6 +22,13 @@ function App() {
       // setBorder(bi);
     }
 
+    async function blackWhiteImage() {
+      console.log("INSI BLACKWHITE IMAGE FUNCTION", link);
+      const response = await PixlyApi.blackWhiteImage(link);
+      console.log("BW IMAGE RESPONSE", response.data)
+      setBwLink(response.data)
+      console.log("BWLINK", bwLink)
+    }
     
   
     // useEffect(function uploadImage() {
@@ -37,8 +45,17 @@ function App() {
     return (
         <div>
           <Image link={link} />
-          <Image link={border} />
+          {bwLink
+          ?
+          <Image link={bwLink} />
+          : null
+          }
           <UploadForm upload={upload} />
+          {link
+          ?
+          <ImageEditForm blackWhiteImage={blackWhiteImage}/>
+          : null
+          }
         </div>
   );
 }

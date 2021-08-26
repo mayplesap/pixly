@@ -6,7 +6,7 @@ from models import db, Pixly
 
 
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif', 'tiff', 'svg'}
-
+IMAGE_PATH = "./images/"
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -44,10 +44,6 @@ def upload_file_to_s3(file, bucket_name, acl="public-read"):
 def upload_backend_file_to_s3(filepath, bucket_name, acl="public-read"):
     filename = filepath.split("/")[-1]
     extension = filepath.split(".")[-1]
-# filepath ./images/cute.jpg
-# filename cute.jpg
-# extension jpg
-# contentType "image/jpg"
     
     if extension == "jpg":
         extension = "jpeg"
@@ -74,19 +70,18 @@ def fetch_image_link_from_db(id):
     return link
 
 def fetch_image_file_from_bucket(link): 
-    
-    # print(link, "IMG LINK FROM DB QUERY")
-    # filename = link.split("/")[-1]
-    # print(filename, "FILENAME FROM DB QUERY")
-    # link.save(f"./images/{filename}")
+    filename = link.split("/")[-1]
+    s3.download_file(S3_BUCKET, filename, f'{IMAGE_PATH}{filename}')
+    return (f'{IMAGE_PATH}{filename}')
 
 def convert_to_black_and_white(imagePath):
     image = Image.open(imagePath)
     greyscale_image = image.convert('L')
     greyscale_image.save(imagePath)
-    link = upload_backend_file_to_s3(imagePath, S3_BUCKET) 
-    os.remove(imagePath)
-    return str(link)
+
+    # link = upload_backend_file_to_s3(imagePath, S3_BUCKET) 
+    # os.remove(imagePath)
+    # return str(link)
 
 
 

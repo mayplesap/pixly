@@ -9,7 +9,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, Pixly
 # from secret import ACCESS_KEY, SECRET_KEY
 from config import S3_BUCKET, S3_KEY, S3_LOCATION, S3_SECRET
-from helpers import s3, upload_file_to_s3, allowed_file, convert_to_black_and_white
+from helpers import s3, upload_file_to_s3, allowed_file, convert_to_black_and_white, fetch_image_file_from_bucket, upload_backend_file_to_s3
 from werkzeug.utils import secure_filename 
 
 app = Flask(__name__)
@@ -53,6 +53,19 @@ db.create_all()
 #     new_img = ImageOps.expand(im, border=border, fill=color)
 #     return new_img
 
+@app.route("/image", methods=["POST"])
+def back_and_white_image():
+    """TODO: docstrings"""
+    print("REQUEST DATA", request.data.decode("UTF-8"))
+    link = request.data.decode("UTF-8")
+    image_path = fetch_image_file_from_bucket(link)
+    print("AFTER IMAGE PATH", image_path)
+    convert_to_black_and_white(image_path)
+    print("AFTER CONVERTTO BW")
+    bw_link = upload_backend_file_to_s3(image_path, S3_BUCKET)
+    print("AFTER UPLOAD BW IMAGE", bw_link)
+    os.remove(image_path)
+    return str(bw_link)
 
 @app.route("/", methods=["POST"])
 @cross_origin()
