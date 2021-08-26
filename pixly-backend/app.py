@@ -3,14 +3,13 @@ import os
 import pdb
 import boto3
 
-from PIL import Image, ImageOps
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, Pixly
 # from secret import ACCESS_KEY, SECRET_KEY
 from config import S3_BUCKET, S3_KEY, S3_LOCATION, S3_SECRET
-from helpers import s3, upload_file_to_s3, allowed_file
+from helpers import s3, upload_file_to_s3, allowed_file, convert_to_black_and_white
 from werkzeug.utils import secure_filename 
 
 app = Flask(__name__)
@@ -40,18 +39,18 @@ db.create_all()
 #     Get data of all images. Respond with JSON like:
 #     ..."""
 
-@app.route("/api/images", methods=["GET"])
-def show_image():
-    """TODO: docstrings"""
-    image = Pixly.query.get(1)
-    print("IMAGE", image)
-    print("IMAGE LINK?", image.img_link)
-    im = Image.open(image.img_link)
-    print("IM", im)
-    color = "green"
-    border = (20,10,20,10)
-    new_img = ImageOps.expand(im, border=border, fill=color)
-    return new_img
+# @app.route("/api/images", methods=["GET"])
+# def show_image():
+#     """TODO: docstrings"""
+#     image = Pixly.query.get(1)
+#     print("IMAGE", image)
+#     print("IMAGE LINK?", image.img_link)
+#     im = Image.open(image.img_link)
+#     print("IM", im)
+#     color = "green"
+#     border = (20,10,20,10)
+#     new_img = ImageOps.expand(im, border=border, fill=color)
+#     return new_img
 
 
 @app.route("/", methods=["POST"])

@@ -1,5 +1,6 @@
 import boto3
-from config import S3_KEY, S3_SECRET, S3_LOCATION
+from config import S3_KEY, S3_SECRET, S3_LOCATION, S3_BUCKET
+from PIL import Image, ImageOps
 
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif', 'tiff', 'svg'}
 
@@ -35,3 +36,13 @@ def upload_file_to_s3(file, bucket_name, acl="public-read"):
         return e
     
     return "{}{}".format(S3_LOCATION, file.filename)
+
+def convert_to_black_and_white(imagePath):
+    image = Image.open(imagePath)
+    greyscale_image = image.convert('L')
+    print(greyscale_image, "THIS IS GSCALEIMG")
+    link = upload_file_to_s3(greyscale_image, S3_BUCKET)
+    print(link, "LINK FROM B&W")
+    return link
+
+

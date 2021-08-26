@@ -16,10 +16,12 @@ function App() {
       const response = await PixlyApi.uploadImage(data);
       const imgLink = response.data;
       setLink(imgLink);
-      const bi = await PixlyApi.borderImage();
-      console.log("BI", bi)
-      setBorder(bi);
+      // const bi = await PixlyApi.borderImage();
+      // console.log("BI", bi)
+      // setBorder(bi);
     }
+
+    
   
     // useEffect(function uploadImage() {
     //   async function uploadImageGetLink() {
