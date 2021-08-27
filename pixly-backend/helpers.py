@@ -1,5 +1,6 @@
 import os
 import boto3
+import math
 from config import S3_KEY, S3_SECRET, S3_LOCATION, S3_BUCKET
 from PIL import Image, ImageOps
 from models import db, Pixly
@@ -79,10 +80,88 @@ def convert_to_black_and_white(imagePath):
     greyscale_image = image.convert('L')
     greyscale_image.save(imagePath)
 
-    # link = upload_backend_file_to_s3(imagePath, S3_BUCKET) 
-    # os.remove(imagePath)
-    # return str(link)
+#############################################################################
+# SEPIA
+# Credit to: https://www.codementor.io/@isaib.cicourel/intermediate-image-filters-mj6y7abx4
+# Create a new image with the given size
+def create_image(i, j):
+    image = Image.new("RGB", (i, j), "white")
+    return image
 
 
+# Get the pixel from the given image
+def get_pixel(image, i, j):
+    # Inside image bounds?
+    width, height = image.size
+    if i > width or j > height:
+        return None
+
+    # Get Pixel
+    pixel = image.getpixel((i, j))
+    return pixel
 
 
+# Limit maximum value to 255
+def get_max(value):
+    if value > 255:
+        return 255
+
+    return int(value)
+
+# Sepia is a filter based on exagerating red, yellow and brown tones
+# This implementation exagerates mainly yellow with a little brown
+def get_sepia_pixel(red, green, blue, alpha):
+    # Filter type
+    value = 0
+
+    # This is a really popular implementation
+    tRed = get_max((0.759 * red) + (0.398 * green) + (0.194 * blue))
+    tGreen = get_max((0.676 * red) + (0.354 * green) + (0.173 * blue))
+    tBlue = get_max((0.524 * red) + (0.277 * green) + (0.136 * blue))
+
+    if value == 1:
+        tRed = get_max((0.759 * red) + (0.398 * green) + (0.194 * blue))
+        tGreen = get_max((0.524 * red) + (0.277 * green) + (0.136 * blue))
+        tBlue = get_max((0.676 * red) + (0.354 * green) + (0.173 * blue))
+    
+    if value == 2:
+        tRed = get_max((0.676 * red) + (0.354 * green) + (0.173 * blue))
+        tGreen = get_max((0.524 * red) + (0.277 * green) + (0.136 * blue))
+        tBlue = get_max((0.524 * red) + (0.277 * green) + (0.136 * blue))
+        
+
+    # Return sepia color
+    return tRed, tGreen, tBlue, alpha
+
+# Convert an image to sepia
+def convert_sepia(imagePath):
+    image = Image.open(imagePath).convert("RGB")
+
+    # Get size
+    width, height = image.size
+
+    # Create new Image and a Pixel Map
+    new = create_image(width, height)
+    pixels = new.load()
+
+    # Convert each pixel to sepia
+    for i in range(0, width, 1):
+        for j in range(0, height, 1):
+            p = get_pixel(image, i, j)
+            pixels[i, j] = get_sepia_pixel(p[0], p[1], p[2], 255)
+
+    # Save new image
+    new.save(imagePath)
+
+###########################################################################
+
+# COLOR MERGE
+
+def convert_to_color_merge(imagePath):
+    image = Image.open(imagePath)
+    print(image, "IMAGE FROM COLOR MERGE")
+    image2 = Image.open(imagePath).convert("RGB")
+    print(image2, "IMAGE2 FROM COLOR MER")
+    red, green, blue = image2.split()
+    new_image = Image.merge("RGB", (green, red, blue))
+    new_image.save(imagePath)
