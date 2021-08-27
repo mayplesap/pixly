@@ -12,6 +12,7 @@ function App() {
     const [isLoading, setIsLoading] = useState(false);
     const [filterLink, setFilterLink] = useState(null);
   
+    /** Functions to upload data, return an image link, and setsstate */
     async function upload(data) {
       const response = await PixlyApi.uploadImage(data);
       const imgLink = response.data;
@@ -38,6 +39,20 @@ function App() {
       setIsLoading(false);
       setFilterLink(response.data)
     }
+
+    async function pointilizeImage() {
+      setIsLoading(true);
+      const response = await PixlyApi.pointilizeImage(link);
+      setIsLoading(false);
+      setFilterLink(response.data)
+    }
+
+    async function addBorder() {
+      setIsLoading(true);
+      const response = await PixlyApi.addBorder(link);
+      setIsLoading(false);
+      setFilterLink(response.data)
+    }
   
     if (isLoading) return <i>Loading...</i>
   
@@ -53,7 +68,12 @@ function App() {
           <UploadForm upload={upload} />
           {link
           ?
-          <ImageEditForm blackWhiteImage={blackWhiteImage} sepiaImage={sepiaImage} colorMergeImage={colorMergeImage}/>
+          <ImageEditForm blackWhiteImage={blackWhiteImage} 
+                         sepiaImage={sepiaImage} 
+                         colorMergeImage={colorMergeImage} 
+                         pointilizeImage={pointilizeImage}
+                         addBorder={addBorder}
+                         />
           : null
           }
         </div>

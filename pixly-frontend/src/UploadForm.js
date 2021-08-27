@@ -12,7 +12,7 @@ import React, { useState } from "react";
 */
 
 function UploadForm({ upload }) {
-  const [formData, setFormData] = useState({ file: null }); // rename to something like formData, so if also had a title and a desc, we could data.append each one, or iterate over and dynamically add them
+  const [formData, setFormData] = useState({ file: null }); 
 
   function handleChangeFile(evt) {
     setFormData({ ...formData, file: evt.target.files[0]});

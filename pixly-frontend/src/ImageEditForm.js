@@ -3,7 +3,7 @@ import React, { useState } from "react";
 /** Image Edit Form 
  * 
  * props:
- * -
+ * -functions to filter image appearance
  * 
  * state:
  * - formData
@@ -11,8 +11,8 @@ import React, { useState } from "react";
  * App -> UploadForm
 */
 
-function ImageEditForm({ blackWhiteImage, sepiaImage, colorMergeImage }) {
-  const [formData, setFormData] = useState({ filter: "blackWhiteImage" }); // rename to something like formData, so if also had a title and a desc, we could data.append each one, or iterate over and dynamically add them
+function ImageEditForm({ blackWhiteImage, sepiaImage, colorMergeImage, pointilizeImage, addBorder}) {
+  const [formData, setFormData] = useState({ filter: "blackWhiteImage" });  
 
   function handleFilter(evt) {
     const { name, value } = evt.target;
@@ -29,6 +29,10 @@ function ImageEditForm({ blackWhiteImage, sepiaImage, colorMergeImage }) {
       sepiaImage()
     } else if (formData.filter === "colorMerge") {
       colorMergeImage()
+    } else if (formData.filter === "pointilize") {
+      pointilizeImage()
+    } else if (formData.filter === "addBorder") {
+      addBorder()
     }
   }
 
@@ -46,6 +50,8 @@ function ImageEditForm({ blackWhiteImage, sepiaImage, colorMergeImage }) {
             <option value="blackWhiteImage">Black &amp; White</option>
             <option value="sepiaImage">Sepia</option>
             <option value="colorMerge">Color Merge (Alien)</option>
+            <option value="pointilize">Pointilize</option>
+            <option value="addBorder">Add Border</option>
         </select>
         <button type="submit" className="btn btn-primary mt-3">Apply Filter</button>
       </div>
