@@ -34,29 +34,10 @@ db.create_all()
 
 ##############################################################################
 
-# @app.route("/api/images")
-# def show_images():
-#     """TODO: NAME PENDING
-#     Get data of all images. Respond with JSON like:
-#     ..."""
-
-# @app.route("/api/images", methods=["GET"])
-# def show_image():
-#     """TODO: docstrings"""
-#     image = Pixly.query.get(1)
-#     print("IMAGE", image)
-#     print("IMAGE LINK?", image.img_link)
-#     im = Image.open(image.img_link)
-#     print("IM", im)
-#     color = "green"
-#     border = (20,10,20,10)
-#     new_img = ImageOps.expand(im, border=border, fill=color)
-#     return new_img
 
 @app.route("/image/bw", methods=["POST"])
 def back_and_white_image():
     """TODO: docstrings"""
-    print("REQUEST DATA", request.data.decode("UTF-8"))
     link = request.data.decode("UTF-8")
     image_path = fetch_image_file_from_bucket(link)
     convert_to_black_and_white(image_path)

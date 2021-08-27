@@ -10,47 +10,50 @@ function App() {
  
     const [link, setLink] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [bwLink, setBwLink] = useState(null);
+    const [filterLink, setFilterLink] = useState(null);
   
     async function upload(data) {
-      console.log("APP UPLOAD", data);
       const response = await PixlyApi.uploadImage(data);
       const imgLink = response.data;
       setLink(imgLink);
-      // const bi = await PixlyApi.borderImage();
-      // console.log("BI", bi)
-      // setBorder(bi);
     }
 
     async function blackWhiteImage() {
+      setIsLoading(true);
       const response = await PixlyApi.blackWhiteImage(link);
-      setBwLink(response.data)
+      setIsLoading(false);
+      setFilterLink(response.data)
     }
     
-  
-    // useEffect(function uploadImage() {
-    //   async function uploadImageGetLink() {
-    //     const response = await axios.post(`${BASE_URL}`);
-    //     setLink(response);
-    //     setIsLoading(false);
-    //   }
-    //    uploadImageGetLink();
-    // }, [filename]);
+    async function sepiaImage() {
+      setIsLoading(true);
+      const response = await PixlyApi.sepiaImage(link);
+      setIsLoading(false);
+      setFilterLink(response.data)
+    }
+    
+    async function colorMergeImage() {
+      setIsLoading(true);
+      const response = await PixlyApi.colorMergeImage(link);
+      setIsLoading(false);
+      setFilterLink(response.data)
+    }
   
     if (isLoading) return <i>Loading...</i>
   
     return (
         <div>
-          <Image link={link} />
-          {bwLink
+          {filterLink
           ?
-          <Image link={bwLink} />
-          : null
+          <Image link={filterLink} />
+          :
+          <Image link={link} />
           }
+
           <UploadForm upload={upload} />
           {link
           ?
-          <ImageEditForm blackWhiteImage={blackWhiteImage}/>
+          <ImageEditForm blackWhiteImage={blackWhiteImage} sepiaImage={sepiaImage} colorMergeImage={colorMergeImage}/>
           : null
           }
         </div>

@@ -11,7 +11,7 @@ import React, { useState } from "react";
  * App -> UploadForm
 */
 
-function ImageEditForm({ blackWhiteImage }) {
+function ImageEditForm({ blackWhiteImage, sepiaImage, colorMergeImage }) {
   const [formData, setFormData] = useState({ filter: "blackWhiteImage" }); // rename to something like formData, so if also had a title and a desc, we could data.append each one, or iterate over and dynamically add them
 
   function handleFilter(evt) {
@@ -25,8 +25,10 @@ function ImageEditForm({ blackWhiteImage }) {
     evt.preventDefault();
     if(formData.filter === "blackWhiteImage") {
       blackWhiteImage()
-    } else {
-      console.log("sepia");
+    } else if (formData.filter === "sepiaImage") {
+      sepiaImage()
+    } else if (formData.filter === "colorMerge") {
+      colorMergeImage()
     }
   }
 
@@ -42,7 +44,8 @@ function ImageEditForm({ blackWhiteImage }) {
           onChange={handleFilter}
           className="form-control">
             <option value="blackWhiteImage">Black &amp; White</option>
-            <option value="sepia">Sepia</option>
+            <option value="sepiaImage">Sepia</option>
+            <option value="colorMerge">Color Merge (Alien)</option>
         </select>
         <button type="submit" className="btn btn-primary mt-3">Apply Filter</button>
       </div>

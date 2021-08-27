@@ -27,15 +27,10 @@ function UploadForm({ upload }) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    const data = new FormData(); // have to append indiv key/value pairs once we have more form fields (see line 15)
-    console.log("FORMDATA", formData);
+    const data = new FormData();
     for(let key in formData) {
       data.append(key, formData[key]);
     }
-  //   for(let pair of data.entries()) {
-  //     console.log(pair[0]+ ', '+ pair[1]);
-  //  }
-    // data.append("name", formData.file);
     upload(data);
     setFormData({ file: null });
   }
