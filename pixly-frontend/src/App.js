@@ -23,11 +23,8 @@ function App() {
     }
 
     async function blackWhiteImage() {
-      console.log("INSI BLACKWHITE IMAGE FUNCTION", link);
       const response = await PixlyApi.blackWhiteImage(link);
-      console.log("BW IMAGE RESPONSE", response.data)
       setBwLink(response.data)
-      console.log("BWLINK", bwLink)
     }
     
   

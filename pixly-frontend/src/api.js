@@ -23,10 +23,8 @@ class PixlyApi {
     const params = (method === "get")
         ? data
         : {};
-    console.log("DATA", data)
     try {
       let res = await axios({ url, method, data, params, headers }); // removed headers
-      console.log("RESPONSE", res);
       return res;
     } catch (err) {
       console.error("API Error:", err.response);
@@ -54,8 +52,21 @@ class PixlyApi {
   /** Black and White Image */
 
   static async blackWhiteImage(link) {
-    console.log("API BWIMAGE LINK", link)
-    let res = await this.request("image", link, "post");
+    let res = await this.request("image/bw", link, "post");
+    return res;
+
+  }
+  /** Black and White Image */
+
+  static async sepiaImage(link) {
+    let res = await this.request("image/sepia", link, "post");
+    return res;
+
+  }
+  /** Black and White Image */
+
+  static async colorMergeImage(link) {
+    let res = await this.request("image/merge", link, "post");
     return res;
 
   }

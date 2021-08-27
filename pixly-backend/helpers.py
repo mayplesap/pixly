@@ -158,10 +158,7 @@ def convert_sepia(imagePath):
 # COLOR MERGE
 
 def convert_to_color_merge(imagePath):
-    image = Image.open(imagePath)
-    print(image, "IMAGE FROM COLOR MERGE")
-    image2 = Image.open(imagePath).convert("RGB")
-    print(image2, "IMAGE2 FROM COLOR MER")
-    red, green, blue = image2.split()
+    image = Image.open(imagePath).convert("RGB")
+    red, green, blue = image.split()
     new_image = Image.merge("RGB", (green, red, blue))
     new_image.save(imagePath)
